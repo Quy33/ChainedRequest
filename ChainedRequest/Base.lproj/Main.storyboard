@@ -20,7 +20,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="80" id="qr6-Pr-Lsn">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="branchCell" rowHeight="80" id="qr6-Pr-Lsn" customClass="BranchTableViewCell" customModule="ChainedRequest" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qr6-Pr-Lsn" id="Bj0-fW-bV1">
@@ -40,6 +40,9 @@
                                                 <constraint firstItem="Hg1-sF-ldv" firstAttribute="top" secondItem="Bj0-fW-bV1" secondAttribute="top" constant="20" id="ZL8-gS-3d0"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="branchNameLabel" destination="Hg1-sF-ldv" id="9Ik-Cw-Jzl"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -54,6 +57,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DBU-dY-sVs"/>
+                    <connections>
+                        <outlet property="tableView" destination="zfb-29-ARE" id="OJi-mM-CzB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
