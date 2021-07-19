@@ -21,18 +21,36 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        gitHubRepository.getRepos().flatMap{
-            repos -> Observable<[Branch]> in
-            
-            let randomNumber = Int.random(in: 0...50)
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        let reposObservable  = gitHubRepository.getRepos().share()
+        let randomNumber = Int.random(in: 0...50)
+
+        reposObservable.map{ repos -> String in
+            let repo = repos[randomNumber]
+            return repo.owner.login + "/" + repo.name
+        }
+        .startWith("Loading...")
+        .bind(to: navigationItem.rx.title)
+        .disposed(by: bag)
+        
+        reposObservable
+            .flatMap{repos -> Observable<[Branch]> in
+
             let repo = repos[randomNumber]
             
-            return self.gitHubRepository.getBranches(ownerName: repo.owner.login, repoName: repo.name)
-        }.bind(to: tableView.rx.items(cellIdentifier: "branchCell", cellType: BranchTableViewCell.self)){
-            index, branch, cell in
-            cell.branchNameLabel.text = branch.name
-            
-        }.disposed(by: bag)
+            return self
+                .gitHubRepository
+                .getBranches(ownerName: repo.owner.login, repoName: repo.name)
+            }
+            .bind(to: tableView
+                    .rx
+                    .items(cellIdentifier: "branchCell",
+                           cellType: BranchTableViewCell.self)){
+                                index, branch, cell in
+                                cell.branchNameLabel.text = branch.name
+                            }.disposed(by: bag)
     }
 
 
@@ -59,18 +77,21 @@ class GitHubRepository{
     private let baseURLString = "https://api.github.com"
     
     func getRepos() -> Observable<[Repo]>{
-        return netWorkService.execute(url: URL(string: baseURLString + "/repositories")! )
+        return netWorkService
+            .execute(url: URL(string: baseURLString + "/repositories")! )
     
     }
     
     func getBranches(ownerName: String, repoName: String) -> Observable<[Branch]>{
-        return netWorkService.execute(url: URL(string: baseURLString + "/repos/\(ownerName)/\(repoName)/branches")! )
+        return netWorkService
+            .execute(url: URL(string: baseURLString + "/repos/\(ownerName)/\(repoName)/branches")! )
     }
 }
 
 class NetWorkService {
     func execute<T: Decodable>(url: URL) -> Observable<T>{
-        return Observable.create{ observer -> Disposable in
+        return Observable
+            .create{ observer -> Disposable in
             let task = URLSession.shared.dataTask(with: url){ data, _, _ in
                 
                 guard let data = data, let decoded = try? JSONDecoder().decode(T.self, from: data) else {return}
