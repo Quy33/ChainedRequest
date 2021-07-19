@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class ViewController: UIViewController {
 
@@ -17,3 +18,16 @@ class ViewController: UIViewController {
 
 }
 
+struct Repo: Decodable {
+    let name : String
+    
+}
+
+struct Owner: Decodable {
+    let login : String
+}
+
+struct Branch: Decodable {
+    let name : String
+    
+}
